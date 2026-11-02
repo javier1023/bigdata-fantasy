@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.bigdatafantasy.app",
+    "sha256_cert_fingerprints": [
+      "54:EA:FA:EA:D1:F4:C6:08:C6:21:1C:0A:36:19:FA:42:62:B4:02:C0:FE:FD:B7:58:2C:95:FA:C1:E4:37:67:F7"
+    ]
+  }
+}]
+

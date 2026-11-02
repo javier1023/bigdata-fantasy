@@ -1,0 +1,23 @@
+# Alternativa a Vercel. Ojo: el plan gratuito de Render se duerme tras 15 min sin visitas
+# (el primer acceso tarda ~1 min) y su disco no es persistente: tras dormirse, recarga los datos de LaLiga.
+services:
+  - type: web
+    name: fantasy-app
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: LALIGA_EMAIL
+        sync: false
+      - key: LALIGA_PASSWORD
+        sync: false
+      - key: LALIGA_LEAGUE
+        value: mi-liga
+      - key: APP_PASSWORD
+        sync: false
+      - key: CRON_SECRET
+        generateValue: true
+

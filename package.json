@@ -1,0 +1,22 @@
+{
+  "name": "fantasy-app",
+  "version": "0.1.0",
+  "description": "Panel de tu liga de LaLiga Fantasy: liquidez, plantillas, rentabilidad y mercado. Solo lectura.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@vercel/blob": "^2.8.0",
+    "express": "^4.22.3",
+    "web-push": "^3.6.7"
+  }
+}
+

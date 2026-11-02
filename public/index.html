@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BigData Fantasy">
+  <title>BigData Fantasy</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon-maskable-192.png">
+  <link rel="stylesheet" href="/styles.css">
+  <style id="migration-notice-style">
+.migration-notice[hidden] { display:none !important; }
+.migration-notice { position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.78); display:flex; justify-content:center; align-items:center; padding:24px 18px; overflow-y:auto; }
+.migration-card { width:100%; max-width:440px; background:#141717; color:#f4f4f5; border:1px solid #2c4939; border-radius:22px; padding:28px 22px 22px; box-shadow:0 24px 80px #000b; }
+.migration-mark { width:48px; height:48px; display:grid; place-items:center; border-radius:14px; background:#174729; color:#52e397; font-size:30px; font-weight:700; margin-bottom:22px; }
+.migration-eyebrow { margin:0 0 10px; color:#6de9a1; font-size:11px; font-weight:800; letter-spacing:.13em; }
+.migration-card h2 { color:#fff; font-size:27px; line-height:1.12; text-transform:none; letter-spacing:-.035em; margin:0 0 15px; }
+.migration-card p:not(.migration-eyebrow) { font-size:15px; line-height:1.48; margin:0 0 16px; }
+.migration-card strong { color:#fff; }
+.migration-deadline { background:#242520; border-left:3px solid #f6c969; border-radius:5px; padding:12px 13px; }
+.migration-go { display:flex; align-items:center; justify-content:center; gap:10px; min-height:50px; border-radius:12px; color:#082111; background:#61dc95; font-size:15px; font-weight:750; text-decoration:none; margin-top:20px; }
+.migration-later { display:block; width:100%; min-height:42px; color:#afb9b4; background:transparent; border:0; margin-top:10px; font-size:13px; cursor:pointer; }
+@media(max-width:370px) { .migration-card { padding:22px 18px 16px; } .migration-card h2 { font-size:25px; } }
+</style>
+</head>
+<body>
+  <div id="migration-notice" class="migration-notice" role="dialog" aria-modal="true" aria-labelledby="migration-title" aria-describedby="migration-copy" hidden>
+    <div class="migration-card">
+      <div class="migration-mark" aria-hidden="true">↗</div>
+      <p class="migration-eyebrow">AVISO IMPORTANTE</p>
+      <h2 id="migration-title">BigData Fantasy se ha mudado</h2>
+      <p id="migration-copy">La app ya está en <strong>bigdatafantasy.com</strong>. Entra allí con tu cuenta de LaLiga Fantasy para seguir usando la versión nueva.</p>
+      <p class="migration-deadline">Esta versión antigua dejará de funcionar por completo el <strong>jueves 1 de octubre</strong>.</p>
+      <a class="migration-go" href="https://bigdatafantasy.com/">Ir a bigdatafantasy.com <span aria-hidden="true">↗</span></a>
+      <button id="migration-later" class="migration-later" type="button">Seguir aquí por ahora</button>
+    </div>
+  </div>
+  <header class="top">
+    <button id="menu-btn" class="menu-btn" type="button" aria-label="Abrir menú" aria-controls="drawer" aria-expanded="false"><svg class="ball" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#fff" stroke="#0b0b0c" stroke-width="3"/><path fill="#0b0b0c" d="M32 20.5l10.9 7.9-4.2 12.8H25.3l-4.2-12.8z"/><path fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linejoin="round" d="M32 20.5V9.2M42.9 28.4l10.6-3.6M38.7 41.2l6.6 9.4M25.3 41.2l-6.6 9.4M21.1 28.4l-10.6-3.6"/><path fill="#0b0b0c" d="M24.6 4.6L32 9.2l7.4-4.6A29 29 0 0 0 24.6 4.6zM53.5 24.8l6.9 1.9a29 29 0 0 0-5.3-12.4zM45.3 50.6l.3 7.9a29 29 0 0 0 10.2-8.6zM18.7 50.6l-10.5-.7a29 29 0 0 0 10.2 8.6zM10.5 24.8L8.9 14.3a29 29 0 0 0-5.3 12.4z"/></svg></button>
+    <div class="top-title">
+      <h1 id="view-title">Panel</h1>
+      <p class="muted top-sub"><span id="league">BigData Fantasy</span> · <span id="updated">Cargando…</span></p>
+    </div>
+    <div class="actions">
+      <button id="refresh" class="icon-btn" title="Actualizar datos" aria-label="Actualizar datos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8.6"/><path d="M20 3v5.6h-5.6"/></svg></button>
+    </div>
+  </header>
+
+  <div id="drawer-bg" class="drawer-bg" aria-hidden="true"></div>
+  <nav id="drawer" class="drawer" aria-label="Secciones" aria-hidden="true">
+    <div class="dr-head">
+      <svg class="ball" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#fff" stroke="#0b0b0c" stroke-width="3"/><path fill="#0b0b0c" d="M32 20.5l10.9 7.9-4.2 12.8H25.3l-4.2-12.8z"/><path fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linejoin="round" d="M32 20.5V9.2M42.9 28.4l10.6-3.6M38.7 41.2l6.6 9.4M25.3 41.2l-6.6 9.4M21.1 28.4l-10.6-3.6"/><path fill="#0b0b0c" d="M24.6 4.6L32 9.2l7.4-4.6A29 29 0 0 0 24.6 4.6zM53.5 24.8l6.9 1.9a29 29 0 0 0-5.3-12.4zM45.3 50.6l.3 7.9a29 29 0 0 0 10.2-8.6zM18.7 50.6l-10.5-.7a29 29 0 0 0 10.2 8.6zM10.5 24.8L8.9 14.3a29 29 0 0 0-5.3 12.4z"/></svg>
+      <div><b>BigData Fantasy</b><span class="muted small" id="dr-league"></span><span class="muted small" id="dr-user"></span></div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-view="panel" data-title="Panel" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Panel</span></button>
+      <button class="tab" data-view="today" data-title="Hoy" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Hoy</span></button>
+      <button class="tab" data-view="summary" data-title="Resumen" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><span>Resumen semanal</span></button>
+      <button class="tab" data-view="moves" data-title="Mercado" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h13l-3-3M17 17H4l3 3"/></svg><span>Mercado</span></button>
+      <button class="tab" data-view="week" data-title="Jornada" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Jornada</span></button>
+      <button class="tab" data-view="compare" data-title="Comparar" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18M3 17h18M7 3l-4 4 4 4M17 13l4 4-4 4"/></svg><span>Comparar</span></button>
+      <button class="tab" data-view="search" data-title="Futbolistas" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>Futbolistas</span></button>
+      <button class="tab" data-view="locks" data-title="Protección" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/></svg><span>Protección</span></button>
+      <button class="tab" data-view="watch" data-title="Vigilar" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span>Vigilar rivales</span><em id="watch-badge" class="dr-badge hidden"></em></button>
+      <button class="tab" data-view="ai" data-title="Habla con la IA" role="tab"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg><span>Habla con la IA</span></button>
+    </div>
+    <div class="dr-sep"></div>
+    <!-- Enlace oficial de LaLiga (el de su web fantasy.laliga.com): abre la app si está instalada; si no, la tienda -->
+    <a id="game" class="dr-link" href="https://fantasylaliga.onelink.me/k6nG?af_xp=custom&amp;af_dp=fantasy%3A%2F%2Fsplashactivity&amp;af_force_deeplink=true&amp;pid=web-fantasy&amp;af_channel=button&amp;c=202607_LLF2627WW_LLF_INS&amp;af_ad=button&amp;af_adset=" target="_blank" rel="noopener"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg><span>Ir al juego</span></a>
+    <button id="account" class="dr-link" type="button"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Mi cuenta</span></button>
+  </nav>
+
+  <!-- Barra inferior: las secciones más usadas siempre a mano; "Más" abre el menú completo -->
+  <nav id="tabbar" class="tabbar" aria-label="Secciones principales">
+    <button type="button" class="tb on" data-go="panel"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Panel</span></button>
+    <button type="button" class="tb" data-go="today"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Hoy</span></button>
+    <button type="button" class="tb" data-go="moves"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h13l-3-3M17 17H4l3 3"/></svg><span>Mercado</span></button>
+    <button type="button" class="tb" data-go="week"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Jornada</span></button>
+    <button type="button" class="tb" id="more-btn" aria-controls="drawer" aria-expanded="false"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Más</span></button>
+  </nav>
+
+  <div id="renew" class="renew hidden" role="status"><span id="renew-txt"></span><button type="button" id="renew-btn">Renovar</button></div>
+
+  <button type="button" id="watch-alert" class="watch-alert hidden"></button>
+
+  <main>
+    <section id="view-panel" class="view">
+      <div class="top-row">
+        <label class="select-wrap">
+          <span class="muted small">Mánager</span>
+          <select id="manager"></select>
+        </label>
+        <div class="clause-box">
+          <div class="clause-head"><label for="clause" class="muted small">Cláusulas (est.)</label><button type="button" id="clause-info" class="info-btn" aria-label="Qué son las cláusulas estimadas" aria-haspopup="dialog">i</button></div>
+          <input id="clause" type="text" inputmode="numeric" placeholder="0 €" autocomplete="off">
+          <span id="clause-real" class="clause-real hidden">En caja real</span>
+        </div>
+      </div>
+
+      <div id="watch-cta"></div>
+      <div class="grid">
+        <article class="card" id="card-value"></article>
+        <article class="card" id="card-liq"></article>
+      </div>
+
+      <article class="card" id="card-summary"></article>
+
+      <article class="card">
+        <h2>Plantilla actual</h2>
+        <div id="squad" class="list"></div>
+      </article>
+
+      <article class="card ex">
+        <h2>Ex-jugadores</h2>
+        <div id="ex" class="list"></div>
+      </article>
+
+    </section>
+
+    <section id="view-compare" class="view hidden">
+      <p class="muted small" style="margin-bottom:12px">Elige dos jugadores. Cada uno compra al del otro como mínimo por su valor.</p>
+      <div class="compare-pickers">
+        <label>Tú entregas<input id="compare-a-search" type="search" placeholder="Buscar jugador…" autocomplete="off" aria-controls="compare-a-results"><div id="compare-a-results" class="compare-results" role="listbox"></div></label>
+        <label>Tú recibes<input id="compare-b-search" type="search" placeholder="Buscar jugador…" autocomplete="off" aria-controls="compare-b-results"><div id="compare-b-results" class="compare-results" role="listbox"></div></label>
+      </div>
+      <div id="compare-output" aria-live="polite"><div class="empty">Elige dos jugadores para compararlos.</div></div>
+    </section>
+
+    <section id="view-search" class="view hidden">
+      <input id="q" type="search" placeholder="Buscar futbolista…" autocomplete="off">
+      <div id="player-filters" class="player-filters" aria-label="Filtros de futbolistas">
+        <select id="pf-team" aria-label="Equipo de LaLiga"><option value="">Todos los equipos</option></select>
+        <select id="pf-owner" aria-label="Mánager"><option value="">Todos los mánagers</option></select>
+        <select id="pf-afford" aria-label="Disponibilidad y caja"><option value="">Todos</option><option value="unowned">Sin dueño</option><option value="affordable">Sin dueño · me llega la caja</option></select>
+        <select id="pf-position" aria-label="Posición"><option value="">Todas las posiciones</option></select>
+        <select id="pf-price" aria-label="Valor de mercado"><option value="">Cualquier precio</option><option value="low">Hasta 5 M</option><option value="mid">5 a 20 M</option><option value="high">Más de 20 M</option></select>
+        <select id="pf-form" aria-label="Tendencia y estado"><option value="">Cualquier tendencia</option><option value="rising">Subiendo</option><option value="falling">Bajando</option><option value="available">Disponibles</option><option value="injured">Bajas y dudas</option></select>
+      </div>
+      <div id="filter-count" class="muted small" role="status"></div>
+      <label id="sort-wrap" class="sort">
+        <span class="muted small">Ordenar por</span>
+        <select id="sort">
+          <option value="change">Subida desde ayer</option>
+          <option value="value">Valor</option>
+          <option value="points">Puntos</option>
+          <option value="bargain">Gangas (puntos por millón)</option>
+          <option value="pred">Predicción próxima jornada</option>
+          <option value="name">Nombre</option>
+        </select>
+      </label>
+      <p class="muted small bid-context">Pujas estimadas con la tendencia diaria, no garantizadas. El filtro de caja exige al menos el valor actual, la puja prudente y, si está anunciado, su precio de salida. Oferta de LaLiga al vender: de −10 % a +10 %.</p>
+      <div id="results" class="list"></div>
+      <article class="card hidden" id="player"></article>
+    </section>
+    <section id="view-today" class="view hidden"><div id="today"></div></section>
+    <section id="view-summary" class="view hidden"><div id="summary"></div></section>
+    <section id="view-watch" class="view hidden"><div id="watch"></div></section>
+
+    <section id="view-moves" class="view hidden">
+      <article class="card"><h2>En el mercado ahora</h2><p id="market-updated" class="muted small"></p><div id="market-current" class="list"></div></article>
+      <h2>Movimientos</h2>
+      <div class="filters">
+        <select id="mv-kind">
+          <option value="">Todo</option>
+          <option value="trade">Entre mánagers</option>
+          <option value="buy">Fichajes del mercado</option>
+          <option value="sell">Ventas a LALIGA</option>
+          <option value="lock">Blindajes</option>
+        </select>
+        <select id="mv-who"><option value="">Todos los mánagers</option></select>
+      </div>
+      <article class="card"><div id="moves" class="list"></div></article>
+    </section>
+
+    <section id="view-week" class="view hidden">
+      <label class="fld" style="margin:0 0 12px"><span>Mánager</span><select id="week-manager"></select></label>
+      <div id="week-pick" class="wk-pick"></div>
+      <div id="week"></div>
+    </section>
+
+    <section id="view-locks" class="view hidden">
+      <label class="check"><input type="checkbox" id="lock-mine"> Ocultar mis jugadores</label>
+      <div id="locks"></div>
+    </section>
+
+    <section id="view-ai" class="view hidden">
+      <div id="ai-quota" class="muted small ai-quota"></div>
+      <div id="ai-chat" class="ai-chat" aria-live="polite"></div>
+      <form id="ai-form" class="ai-form">
+        <input type="text" id="ai-input" maxlength="500" placeholder="Pregunta algo de tu liga…" autocomplete="off" enterkeyhint="send">
+        <button type="submit" id="ai-send" class="ai-send" aria-label="Enviar pregunta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+      </form>
+    </section>
+  </main>
+
+  <div id="clause-help" class="sheet-bg hidden" role="dialog" aria-modal="true" aria-labelledby="clause-help-title" aria-describedby="clause-help-text">
+    <div class="sheet">
+      <h2 id="clause-help-title">Cláusulas estimadas</h2>
+      <p id="clause-help-text">Si un rival ha subido cláusulas, ha gastado dinero que no aparece en sus compras. Pon aquí cuánto crees que ha gastado y lo restamos de su caja estimada. Así ves una cifra más realista de lo que podría pujar. Es una estimación tuya, no leemos su saldo ni sabemos cuánto gastó en cláusulas.</p>
+      <p class="muted small">Tu caja real ya tiene esos gastos descontados, por eso no necesitas introducirlos.</p>
+      <button type="button" id="clause-help-close" class="primary">Entendido</button>
+    </div>
+  </div>
+
+  <div id="alert" class="sheet-bg hidden" role="dialog" aria-modal="true" aria-labelledby="al-title">
+    <div class="sheet">
+      <h2>Añadir alerta</h2>
+      <div class="big" id="al-title"></div>
+      <p class="muted small" id="al-sub"></p>
+      <label class="fld"><span>Avisarme</span>
+        <select id="al-min">
+          <option value="0">Justo cuando acabe</option>
+          <option value="5">5 min antes</option>
+          <option value="10">10 min antes</option>
+          <option value="15">15 min antes</option>
+          <option value="30">30 min antes</option>
+          <option value="60">1 hora antes</option>
+          <option value="120">2 horas antes</option>
+        </select>
+      </label>
+      <label class="fld"><span>Texto del aviso</span><input id="al-text" type="text" maxlength="120"></label>
+      <button type="button" id="al-ics" class="primary">📅 Añadir al calendario</button>
+      <p class="muted small center">Con el aviso ya activado a la hora elegida.</p>
+      <p class="muted small center only-ios">Se abre la hoja de "Añadir evento" del iPhone: arriba puedes elegir el calendario, también el de Google si lo tienes en Ajustes › Calendario › Cuentas.</p>
+      <a id="al-google" class="secondary no-ios" href="#" target="_blank" rel="noopener">Abrir en Google Calendar</a>
+      <p class="muted small center no-ios">Google no deja fijar el aviso por enlace: el evento empieza a la hora de la alerta y salta tu aviso por defecto.</p>
+      <button type="button" id="al-cancel" class="link">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="login" class="login hidden" role="dialog" aria-modal="true" aria-labelledby="sc-title">
+    <div id="welcome-card" class="login-card welcome hidden">
+      <button type="button" id="wl-close" class="wl-close" aria-label="Cerrar">×</button>
+      <div class="wl-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i class="wl-dot4"></i></div>
+      <section class="wl-step" data-step="1">
+        <div class="wl-emoji" aria-hidden="true">🧪⚽</div>
+        <h1 id="wl-title">Bienvenido a la beta de BigData Fantasy</h1>
+        <p>Eres de los primeros en probarla. Gracias por echarnos una mano: cada fallo que nos cuentes es un fichaje de 0 € para la app.</p>
+        <p>Si algo se rompe, no cuadra o se te ocurre una idea, escríbenos a <a href="mailto:bigdatafantasy@gmail.com">bigdatafantasy@gmail.com</a>. Leemos todo, incluso las quejas.</p>
+        <p class="wl-joke">Y si conoces al creador de primera mano, pídele su WhatsApp. Promete contestar rápido.</p>
+        <button type="button" class="primary" data-next="2">Vamos allá</button>
+      </section>
+      <section class="wl-step hidden" data-step="2">
+        <div class="wl-emoji" aria-hidden="true">📬</div>
+        <h1>¿Dónde te escribimos?</h1>
+        <p>Déjanos tu email personal para contarte novedades de la beta y preguntarte qué tal va. Nada de spam, palabra.</p>
+        <label class="fld"><span>Tu email personal</span><input id="wl-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tu@email.com"></label>
+        <p id="wl-err" class="lg-err hidden" role="alert"></p>
+        <button type="button" class="primary" id="wl-save">Seguir</button>
+        <button type="button" class="link wl-skip" data-next="3">Prefiero no dejarlo</button>
+      </section>
+      <section class="wl-step hidden" data-step="3">
+        <div class="wl-emoji" aria-hidden="true">🔑</div>
+        <h1 id="wl-login-h">Entras con tu cuenta de LaLiga Fantasy</h1>
+        <p id="wl-login-txt">En la siguiente pantalla entrarás en LaLiga Fantasy, no aquí. Puedes elegir Google, Apple, Facebook o email. Volverás con un código para leer tu liga: plantilla, mercado, rivales y puntos.</p>
+        <ul class="wl-list">
+          <li>Solo leemos. No fichamos, no vendemos y no tocamos tu alineación.</li>
+          <li id="wl-access-li">No nos das tu contraseña. Guardamos cifrado el permiso de lectura que da LaLiga.</li>
+          <li id="wl-social-li">Entras directamente en LaLiga con Google, Apple, Facebook o email.</li>
+        </ul>
+        <button type="button" class="primary" id="wl-done">Entendido, a entrar</button>
+      </section>
+      <section class="wl-step hidden" data-step="4">
+        <div class="wl-emoji" aria-hidden="true">📲</div>
+        <h1>Tenla a mano en tu pantalla de inicio</h1>
+        <p>Añádela como si fuera una app más: se abre de un toque, a pantalla completa, y puedes recibir avisos.</p>
+        <ol class="wl-list wl-a2hs" id="wl-ios">
+          <li>Ábrela en <b>Safari</b>.</li>
+          <li>Toca el botón <b>Compartir</b> <span class="ios-share" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8"/></svg></span>. Si no lo ves, está dentro del botón <b>···</b>.</li>
+          <li>Baja y elige <b>Añadir a pantalla de inicio</b>.</li>
+          <li>Toca <b>Añadir</b>. Listo, ya tienes el balón en tu pantalla.</li>
+        </ol>
+        <ol class="wl-list wl-a2hs hidden" id="wl-android">
+          <li>Ábrela en <b>Chrome</b>.</li>
+          <li>Toca el menú <b>⋮</b> de arriba a la derecha.</li>
+          <li>Elige <b>Añadir a pantalla principal</b> (o <b>Instalar aplicación</b>).</li>
+          <li>Confirma con <b>Añadir</b>. Listo.</li>
+        </ol>
+        <button type="button" class="primary" id="wl-a2hs-done">Hecho</button>
+        <button type="button" class="link wl-skip" id="wl-a2hs-later">Ahora no</button>
+      </section>
+    </div>
+    <!-- Acceso por LaLiga, sin pedir contraseña en esta web -->
+    <div id="social-card" class="login-card hidden">
+      <div class="login-logo"><svg class="ball" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#fff" stroke="#0b0b0c" stroke-width="3"/><path fill="#0b0b0c" d="M32 20.5l10.9 7.9-4.2 12.8H25.3l-4.2-12.8z"/><path fill="none" stroke="#0b0b0c" stroke-width="2.6" stroke-linejoin="round" d="M32 20.5V9.2M42.9 28.4l10.6-3.6M38.7 41.2l6.6 9.4M25.3 41.2l-6.6 9.4M21.1 28.4l-10.6-3.6"/><path fill="#0b0b0c" d="M24.6 4.6L32 9.2l7.4-4.6A29 29 0 0 0 24.6 4.6zM53.5 24.8l6.9 1.9a29 29 0 0 0-5.3-12.4zM45.3 50.6l.3 7.9a29 29 0 0 0 10.2-8.6zM18.7 50.6l-10.5-.7a29 29 0 0 0 10.2 8.6zM10.5 24.8L8.9 14.3a29 29 0 0 0-5.3 12.4z"/></svg></div>
+      <h1 id="sc-title">Entrar con LaLiga Fantasy</h1>
+      <p class="muted">Elige Google, Apple, Facebook o email en LaLiga. La contraseña se introduce allí, no aquí. Sigue estos pasos para conectar tu liga.</p>
+      <ol class="steps">
+        <li><b>Abre el login de LaLiga</b> y entra con Google, Apple o Facebook, igual que en la app del Fantasy. Si usas email, entra también desde la página de LaLiga.
+          <a id="sc-open" class="primary step-btn" href="#" target="_blank" rel="noopener">Abrir login de LaLiga ↗</a></li>
+        <li><b>Acabarás en jwt.ms</b>, una página de Microsoft. Verás letras y números raros: es normal, pero no copies ese texto.</li>
+        <li><b>Copia la dirección, no lo que dice la página.</b> En el iPhone, toca <b>Compartir</b> en Safari y elige <b>Copiar</b>. También puedes tocar la barra de direcciones y luego <b>Copiar</b>. Si no ves Compartir, búscalo en ···.
+          <span class="step-warn">No copies el texto largo que sale en la página. Lo que hay que copiar empieza por <b>https://jwt.ms/?code=</b></span></li>
+        <li><b>Vuelve a BigData Fantasy y pégala.</b> Si la abriste desde el icono del iPhone, vuelve al icono; si no, vuelve a la pestaña anterior de Safari. Toca el botón de abajo.
+          <button type="button" id="sc-paste" class="secondary step-btn">Pegar la dirección copiada</button>
+          <textarea id="sc-url" rows="3" placeholder="https://jwt.ms/?code=…" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea>
+          <button type="button" id="sc-go" class="primary step-btn">Entrar</button></li>
+      </ol>
+      <p id="sc-err" class="lg-err hidden" role="alert"></p>
+      <p class="muted small">Hazlo seguido: el enlace caduca en unos minutos y solo vale una vez. No se lo pases a nadie.</p>
+      <p class="muted small">Tu contraseña se escribe en LaLiga, nunca en esta web. Guardamos cifrado el permiso que da LaLiga para leer y recargar la liga. Los accesos antiguos con contraseña cifrada siguen activos hasta que sus usuarios migren. <a href="/privacidad.html">Privacidad</a>.</p>
+      <button type="button" id="sc-back" class="link hidden">Ahora no</button>
+    </div>
+  </div>
+
+  <div id="acct" class="sheet-bg hidden" role="dialog" aria-modal="true" aria-labelledby="ac-title">
+    <div class="sheet">
+      <h2 id="ac-title">Mi cuenta</h2>
+      <p class="big" id="ac-email"></p>
+      <p class="muted small" id="ac-plan"></p>
+      <p class="muted small hidden" id="ac-social"></p>
+      <div id="ac-admin" class="hidden">
+        <span class="muted small">Ver la app como (solo tú ves esto)</span>
+        <div class="seg"><button type="button" data-mode="premium">Plan completo</button><button type="button" data-mode="free">Plan básico</button></div>
+        <div class="testers">
+          <span class="muted small">Beta abierta: plan completo para todos</span>
+          <div class="seg" id="ac-beta"><button type="button" data-beta="off">Apagada</button><button type="button" data-beta="on">Encendida</button></div>
+          <p class="muted small" id="ac-beta-hint"></p>
+        </div>
+        <div class="testers">
+          <span class="muted small">Venta del pase de temporada (Stripe)</span>
+          <div class="seg" id="ac-billing"><button type="button" data-billing="off">Apagada</button><button type="button" data-billing="owner">Solo yo</button><button type="button" data-billing="on">Todos</button></div>
+          <p class="muted small" id="ac-billing-hint"></p>
+        </div>
+        <div class="testers">
+          <span class="muted small">Testers (acceso completo)</span>
+          <div id="ac-testers" class="tlist"></div>
+          <form id="ac-tester-form" class="tadd"><input id="ac-tester" type="email" placeholder="email de LaLiga del tester" autocomplete="off" autocapitalize="off"><button type="submit">Añadir</button></form>
+        </div>
+        <div class="testers">
+          <span class="muted small" id="ac-users-title">Usuarios registrados</span>
+          <div id="ac-users" class="tlist"><div class="muted small">Cargando…</div></div>
+        </div>
+        <div class="testers">
+          <span class="muted small" id="ac-fb-title">Feedback recibido</span>
+          <div id="ac-fb" class="tlist"><div class="muted small">Cargando…</div></div>
+        </div>
+        <div class="testers">
+          <span class="muted small" id="ac-fails-title">Logins fallidos (7 días)</span>
+          <div id="ac-fails" class="tlist"><div class="muted small">Cargando…</div></div>
+        </div>
+      </div>
+      <label class="fld" id="ac-league-wrap"><span>Liga</span><select id="ac-league"></select></label>
+      <p class="muted small" id="ac-league-hint"></p><button type="button" id="ac-league-scan" class="link">Buscar ligas nuevas en mi cuenta</button>
+      <div class="fb-box" id="feedback">
+        <h3>Contacta con el creador</h3>
+        <p class="muted small">¿Algo falla, se te ocurre una idea o quieres quejarte con cariño? Escríbelo aquí y lo lee el creador. También puedes escribir a <a href="mailto:bigdatafantasy@gmail.com">bigdatafantasy@gmail.com</a>.</p>
+        <textarea id="fb-text" rows="4" maxlength="2000" placeholder="Cuéntanos lo que quieras…"></textarea>
+        <button type="button" id="fb-send" class="primary">Enviar feedback</button>
+        <a id="fb-mail" class="secondary fb-mail" href="mailto:bigdatafantasy@gmail.com?subject=Feedback%20BigData%20Fantasy">Prefiero escribir desde mi correo</a>
+      </div>
+      <button type="button" id="ac-logout" class="primary">Cerrar sesión</button>
+      <button type="button" id="ac-delete" class="secondary danger">Borrar mi cuenta y mis datos</button>
+      <p class="muted small center">Borrar elimina de la app tu acceso cifrado y los datos de tu liga. Tu cuenta de LaLiga no se toca.</p>
+      <p class="muted small center"><a href="/privacidad.html" style="color:inherit">Política de privacidad</a> · App independiente, sin relación con LaLiga</p>
+      <button type="button" id="ac-cancel" class="link">Cerrar</button>
+    </div>
+  </div>
+
+  <div id="pass" class="sheet-bg hidden" role="dialog" aria-modal="true" aria-labelledby="ps-title">
+    <div class="sheet">
+      <h2 id="ps-title">Pase de temporada</h2>
+      <p class="big"><b id="ps-price">4,99 €</b> <span class="muted small">pago único</span></p>
+      <ul class="ps-list">
+        <li>Liquidez y caja de todos los rivales</li>
+        <li>Mercado completo y rentabilidad de cada mánager</li>
+        <li>Vigilar rivales con notificaciones en el móvil</li>
+        <li>Todas las protecciones, jornadas y movimientos de cada jugador</li>
+      </ul>
+      <p class="muted small" id="ps-terms"></p>
+      <label class="ps-consent"><input type="checkbox" id="ps-consent"> <span>Quiero empezar a usar Premium ya y entiendo que, al empezar, pierdo el derecho de desistimiento de 14 días (salvo la devolución proporcional de arriba).</span></label>
+      <button type="button" id="ps-buy" class="primary" disabled>Comprar pase</button>
+      <p class="muted small center" id="ps-mode"></p>
+      <button type="button" id="ps-cancel" class="link">Ahora no</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script>
+    (function () {
+      var notice = document.getElementById('migration-notice');
+      var later = document.getElementById('migration-later');
+      notice.hidden = false;
+      later.addEventListener('click', function () {
+        notice.hidden = true;
+      });
+    }());
+  </script>
+  <script src="/calc.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
+

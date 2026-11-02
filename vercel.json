@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ],
+  "functions": {
+    "api/index.js": { "maxDuration": 120 }
+  },
+  "crons": [
+    { "path": "/api/refresh", "schedule": "30 22 * * *" }
+  ]
+}
+
